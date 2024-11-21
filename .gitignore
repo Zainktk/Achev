@@ -56,4 +56,4 @@ buck-out/
 # Environment
 # .env.development
 # .env.production
-*/_generated_types/
+*/_generated_types/android/fastlane/firebase_login_credentials.json
