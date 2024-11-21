@@ -1,0 +1,26 @@
+# the project be cleaned before building it
+clean(true)
+# App scheme name
+scheme("app")
+# Method used to export the archive
+export_method("app-store")
+#provide provisioning profiles to use
+export_options({
+  method: "app-store",
+  provisioningProfiles: {
+    "com.doerz.fc" => ENV['PROFILE_UUID'],
+  },
+  signingCertificate: ENV['CERTIFICATE_UUID']
+})
+# submit_beta_review(true)
+
+# distribute_only(true)
+# notify_external_testers(true)
+
+# Specify the path to store .ipa file
+output_directory("#{ENV['WORKING_DIR']}/ios/fastlane/builds")
+# Excludes bitcode from the build
+include_bitcode(false)
+# Excludes symbols from the build.
+include_symbols(false)
+

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "688209842847",
+    "project_id": "achev-mobile-app",
+    "storage_bucket": "achev-mobile-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:688209842847:android:7b50544e413faa764348aa",
+        "android_client_info": {
+          "package_name": "com.doerz.fcandroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUtPJGCIKiAGdybTMFmFVOTtpfYb62qEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

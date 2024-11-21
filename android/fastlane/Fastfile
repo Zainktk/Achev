@@ -1,0 +1,68 @@
+default_platform(:android)
+
+platform :android do
+  before_all do
+  end
+
+  desc "Automatically increment your build number every time you create a new release in App Distribution"
+  lane :increment_version do
+    puts "increment_version trigger"
+    latest_release = firebase_app_distribution_get_latest_release(
+      app: ENV["FIREBASE_APP_ID"],
+      service_credentials_file: ENV["FIREBASE_LOGIN_CREDENTIALS"]
+    )
+    puts "latest_release #{latest_release}"
+    # increment_version_code({ version_code: 1 })
+    increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
+    puts "increment_version_code"
+
+  end
+
+  desc "Submit a new Beta Build to firebase"
+  lane :beta do
+    increment_version
+    puts "increment_version_code DONE"
+
+    gradle(task: "clean assembleRelease")
+    puts "clean assembleRelease DONE"
+
+    gradle(
+      task: "assemble",
+      # flavor: "main",
+      build_type: "Release"
+    )
+    puts "gradle Release DONE"
+
+    # find apk path
+    # if we have multi flavor then use this and change path
+    # output_path = "./app/build/outputs/apk/production/release/" 
+    output_path = "./app/build/outputs/apk/release/"
+    puts "output_path #{output_path}"
+
+    output_json_path = output_path + "output-metadata.json"
+    build_output = load_json(json_path: output_json_path)
+    elements = build_output["elements"][0]
+    apk_path = output_path + elements["outputFile"]
+    release_note_information = "BRANCH => #{git_branch} - developer: #{last_git_commit[:author]} - commit: #{last_git_commit[:message]}"
+    release_note = "#{release_note_information}"
+
+    firebase_distribute = firebase_app_distribution(
+      app: ENV["FIREBASE_APP_ID"],
+      apk_path: apk_path,
+      release_notes: "#{release_note}",
+      groups_file: "fastlane/groups.txt",
+      service_credentials_file: ENV["FIREBASE_LOGIN_CREDENTIALS"]
+    )
+
+    slack_message = "Hi team, we have a new Fertility Connects Android Beta build #{firebase_distribute[:buildVersion]} available! You can download it [here](#{firebase_distribute[:firebaseConsoleUri]})."
+    # share on Slack
+    slack(
+      message: slack_message,
+      slack_url: ENV['SLACK_URL'],
+      channel: "#fettilityconnect",  # Optional, by default will post to the default channel configured for the Slack Bot.
+      success: true,        # Optional, defaults to true.
+    )
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
+end

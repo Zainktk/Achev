@@ -1,0 +1,99 @@
+default_platform(:ios)
+
+before_all do
+  # ensure_git_branch(branch: 'automate-build')
+  # ensure_git_status_clean
+  # git_pull
+  # setup_ci
+end
+
+platform :ios do
+  private_lane :update_build_number do
+    # Increases the build number by 1
+    my_app_store_connect
+    testflight_build_number = latest_testflight_build_number(api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY])
+    increment_build_number(
+      build_number: testflight_build_number+1  , # specify specific build number (optional, omitting it increments by one)
+      # build_number: 1, # specify specific build number (optional, omitting it increments by one)
+      xcodeproj: "#{ENV['WORKING_DIR']}/ios/app.xcodeproj" # (optional, you must specify the path to your main Xcode project if it is not in the project root directory)
+    )
+  end
+
+  desc "connect to apple store"
+  private_lane :my_app_store_connect do
+    api_key = app_store_connect_api_key(
+      key_id: ENV['FASTLANE_KEY_ID'],
+      issuer_id: ENV['FASTLANE_ISSUER_ID'],
+      key_content: "#{ENV['FASTLANE_KEY_CONTENT']}",
+      is_key_content_base64: false,
+      duration: 1200, # optional (maximum 1200)
+      in_house: false # optional but may be required if using match/sigh
+    )
+  end
+
+  desc "Sync certificates of development"
+  private_lane :sync_certificates do
+    local_cert_path = "#{ENV['WORKING_DIR']}"
+    local_profile_path = "#{ENV['WORKING_DIR']}"
+
+    # Configure Keychain Partition so that buil wont show prompt for password
+    sh "security set-key-partition-list -S apple-tool:,apple: -s -k #{ENV['KEYCHAIN_PASSWORD']} /Users/runner/Library/Keychains/fastlane_tmp_keychain-db"
+
+    unlock_keychain( # By default the keychain is added to the existing. To replace them with the selected keychain you may use `:replace`
+      path: "/Users/runner/Library/Keychains/fastlane_tmp_keychain-db",
+      password: ENV['KEYCHAIN_PASSWORD'],
+      add_to_search_list: true, # To only add a keychain use `true` or `:add`.
+      set_default: true
+    )
+
+    # Use `cert` action to retrieve and install certificates locally
+    certList = cert(
+      api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
+      generate_apple_certs: false,
+      output_path: local_cert_path,
+      username: ENV['APP_STORE_USERNAME'],
+      team_id: ENV['APP_STORE_TEAM_ID'],
+      keychain_path: "/Users/runner/Library/Keychains/fastlane_tmp_keychain-db",
+      keychain_password: ENV['CERTIFICATE_PASSWORD']
+    )
+    ENV['CERTIFICATE_UUID'] = certList
+
+    # Use `sigh` action to retrieve and install provisioning profiles locally
+    profile = sigh(
+      api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY],
+      app_identifier: ENV['APP_IDENTIFIER'],  # Replace with your app identifier(s)
+      output_path: local_profile_path,
+      ignore_profiles_with_different_name: true
+    )
+    ENV['PROFILE_UUID'] = profile
+  end
+
+  desc "Create ipa"
+  lane :build do
+    sync_certificates
+    update_build_number
+    unlock_keychain( # By default the keychain is added to the existing. To replace them with the selected keychain you may use `:replace`
+      path: "/Users/runner/Library/Keychains/fastlane_tmp_keychain-db",
+      password: ENV['KEYCHAIN_PASSWORD'],
+      add_to_search_list: true, # To only add a keychain use `true` or `:add`.
+      set_default: true
+    )
+    gym
+  end
+
+  desc "Upload to TestFlight"
+  lane :beta do  
+    my_app_store_connect
+    build
+    pilot
+    testflight_build_number = latest_testflight_build_number(api_key: Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY])
+    slack_message = "Hi team, we have a new Fertility Connects IOS Beta build #{testflight_build_number + 1} available!"
+    # slack_message = "Hi team, we have a new Fertility Connects IOS Beta build #{1} available!"
+    slack(
+      message: slack_message,
+      slack_url: ENV['SLACK_URL'],
+      channel: "#fettilityconnect",  # Optional, by default will post to the default channel configured for the Slack Bot.
+      success: true,        # Optional, defaults to true.
+    )
+  end
+end
