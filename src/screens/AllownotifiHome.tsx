@@ -24,6 +24,8 @@ const AllowNotificationScreen = () => {
     console.log("Notification preference saved:", enabled);
   };
 
+  console.log("nnmnb");
+
   const handleTogglePush = async (value: boolean) => {
     setPushEnabled(value);
     saveNotificationPreference(value);
