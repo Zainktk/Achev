@@ -21,8 +21,8 @@ const YouthServices = ({ service, id, onPress, status }: YouthServicestype) => {
               status === "Pending"
                 ? "rgba(250, 243, 240, 1))"
                 : "rgba(224, 79, 57, 1)",
-            height: 40,
-            borderRadius: 20,
+            height: 50,
+            borderRadius: 25,
             marginHorizontal: 20,
             paddingHorizontal: 10,
             justifyContent: "center",

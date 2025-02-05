@@ -58,3 +58,7 @@ buck-out/
 # .env.production
 */_generated_types/android/fastlane/firebase_login_credentials.json
 android/fastlane/firebase_login_credentials.json
+config.bat
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat

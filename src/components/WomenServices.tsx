@@ -30,8 +30,8 @@ const WomenServices = ({
               status === "Pending"
                 ? "rgba(239, 232, 238, 1)"
                 : "rgba(96, 25, 84, 1)",
-            height: 40,
-            borderRadius: 20,
+            height: 50,
+            borderRadius: 25,
             marginHorizontal: 20,
             paddingHorizontal: 10,
             justifyContent: "center",

@@ -14,6 +14,7 @@ import {
   ScreenSubText,
   ScreenText,
   ScreenTitle,
+  SignupEmailInput,
 } from "@atoms";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useLogin, useSignup, useWatchFields } from "@hooks";
@@ -41,6 +42,7 @@ import {
 } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  Alert,
   Keyboard,
   Linking,
   NativeMethods,
@@ -331,11 +333,11 @@ export default function EmailScreen({ navigation, route }: Props) {
   };
 
   const openURL = async (url: string) => {
-    const supported = await Linking.canOpenURL(url);
-    if (supported) {
+    try {
       await Linking.openURL(url);
-    } else {
-      console.error("Don't know how to open this URL: " + url);
+    } catch (error) {
+      Alert.alert("Error", "Unable to open URL: " + url);
+      console.error("Error opening URL:", error);
     }
   };
   const scrollToError = (firstErrorFieldKey: string) => {
@@ -425,7 +427,7 @@ export default function EmailScreen({ navigation, route }: Props) {
                 field: { value, onChange },
                 formState: { errors },
               }) => (
-                <Input
+                <SignupEmailInput
                   value={value}
                   onChangeText={onChange}
                   error={errors?.email?.message}

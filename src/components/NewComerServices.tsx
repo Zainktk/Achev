@@ -26,8 +26,8 @@ const NewComerServices = ({
               status === "Pending"
                 ? "rgba(246, 229, 235, 1)"
                 : "rgba(165, 0, 52, 1)",
-            height: 40,
-            borderRadius: 20,
+            height: 50,
+            borderRadius: 25,
             marginHorizontal: 20,
             paddingHorizontal: 10,
             justifyContent: "center",

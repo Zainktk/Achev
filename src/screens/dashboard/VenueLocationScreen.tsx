@@ -370,6 +370,7 @@ const VenueLocationScreen = () => {
                   setSelectedvenue={setSelectedvenue}
                   selectvenue={selectvenue}
                   filteredEvents={filteredEvents}
+                  onPressApplyfilter={onPressApplyfilter}
                 />
               </View>
             ) : dayPress ? (

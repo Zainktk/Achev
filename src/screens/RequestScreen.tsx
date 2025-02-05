@@ -243,7 +243,7 @@ const RequestScreen = () => {
                   fontSize: 24,
                 }}
               >
-                Are you sure you want to submitting this request to remove your
+                Are you sure you want to submit this request to remove your
                 Achēv account?
               </Text>
               <Buttonn

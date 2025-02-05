@@ -1,3 +1,4 @@
+import { Buttonn } from "@atoms";
 import React, { useState } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
 import { useTheme } from "react-native-paper";
@@ -7,6 +8,7 @@ type FilterEventstypes = {
   onpressVenueListBack: () => void;
   setSelectedvenue: (venue: string) => void;
   selectvenue: string;
+  onPressApplyfilter: () => void;
   filteredEvents: string[];
 };
 
@@ -14,6 +16,7 @@ const SelectLocation = ({
   onpressVenueListBack,
   setSelectedvenue,
   selectvenue,
+  onPressApplyfilter,
 }: FilterEventstypes) => {
   const theme = useTheme();
   const venues = [
@@ -119,6 +122,14 @@ const SelectLocation = ({
         </TouchableOpacity>
       </View>
       <View style={{ marginTop: 20 }}>{renderVenues()}</View>
+      <View style={{}}>
+                <Buttonn
+                  title={"Apply"}
+                  ButtonStyle={{ marginTop: 60, height: 60, marginHorizontal: 20 }}
+                  onPress={onPressApplyfilter}
+                />
+              </View>
+
     </View>
   );
 };

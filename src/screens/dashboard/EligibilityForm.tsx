@@ -99,7 +99,7 @@ const EligibilityForm = () => {
 
   const [valueStat, setValueStat] = useState<number | null>(null);
   const [openState, setOpenStat] = useState(false);
-  const [itemsState, setItemsStat] = useState([]);
+  const [itemsState, setItemsStat] = useState([{}]);
   const [loading, setLoading] = useState(true);
   const [isloading, setIsLoading] = useState(true);
   const [responsedata, setResponseData] = useState({});
@@ -184,7 +184,7 @@ const EligibilityForm = () => {
       setIsLoading(false);
       console.error(
         "Error fetching services:",
-        error.response?.data || error.message
+        error?.response?.data || error?.message
       );
       throw error;
     }
@@ -221,6 +221,11 @@ const EligibilityForm = () => {
           label: item.name,
           value: item.id,
         }));
+
+      console.log(
+        "canadaiaStatus----->>>>>",
+        canadaiaStatus?.map((item: any) => item?.label)
+      );
 
       const incomeOptions = data
         .filter((item: { field: string }) => item.field === "Income Source")
@@ -288,7 +293,6 @@ const EligibilityForm = () => {
       const initialValues = Desigatdgroup.filter((item: { value: number }) =>
         Designat?.includes(item.value)
       ).map((item: { label: any }) => item.label);
-
       console.log("Initial Values:========>>>", initialValues);
       console.log("Updated Desigatdgroup:", Desigatdgroup);
       console.log("Updated Designat:", Designat);
@@ -562,7 +566,7 @@ const EligibilityForm = () => {
           label: item.name,
           value: item.id,
         }));
-
+      console.log("states========>>>>>>>>>>>>>", states);
       setItemsStat(states);
       setLoading(false);
     } catch (error) {
@@ -635,13 +639,18 @@ const EligibilityForm = () => {
   };
 
   console.log("valueCanada===>>>", valueCanada);
-  console.log("valueStat===>>>", valueStat);
+  console.log("itemsCanada===>>>", itemsCanada);
 
   useEffect(() => {
-    fetchData();
     fetchContent();
     fetchState();
   }, []);
+
+  useEffect(() => {
+    if (Designat) {
+      fetchData();
+    }
+  }, [Designat]);
 
   console.log("valueEmployment---==", valueEmployment);
 
@@ -690,10 +699,11 @@ const EligibilityForm = () => {
         y: 0, // Or calculate the position of the specific field
         animated: true,
       });
+      console.log("error ------>>>", errors);
     }
   };
   console.log("userrr--->>>>", userData()?.designatedGroupsID);
-  console.log("isValid===>>>", isValid);
+  console.log("itemsCanada===>>>", itemsCanada);
   return (
     <View style={{ paddingTop: insets.top + 10, flex: 1 }}>
       <View>
@@ -703,7 +713,11 @@ const EligibilityForm = () => {
           onBack={() => ProgramStack.goBack()}
         />
       </View>
-      <ScrollView style={{ flex: 2 }}>
+      <ScrollView
+        style={{ flex: 2 }}
+        ref={scrollViewRef}
+        nestedScrollEnabled={true}
+      >
         <View style={{ marginTop: 40, marginLeft: 25, gap: 20 }}>
           <Text
             style={{
@@ -998,7 +1012,14 @@ const EligibilityForm = () => {
                     style={{
                       borderColor: theme.colors.primary,
                       borderRadius: 1,
+                      zIndex: openGender ? 1000 : 1,
                       borderWidth: 2,
+                    }}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
+                    dropDownContainerStyle={{
+                      position: "relative",
+                      top: 0,
                     }}
                   />
                 )}
@@ -1012,12 +1033,11 @@ const EligibilityForm = () => {
             </View>
           ) : null}
           {responsedata?.status_in_canada_id === true ? (
-            <View style={{ zIndex: openCanada ? 900 : 1 }}>
+            <View style={{ zIndex: openCanada ? 1000 : 1 }}>
               <Text style={{ marginBottom: 10 }}>
                 <Text style={{ fontWeight: "bold" }}>Status in Canada</Text> -
                 What is your status in Canada?
               </Text>
-
               <Controller
                 control={control}
                 name="statusInCanada"
@@ -1039,6 +1059,12 @@ const EligibilityForm = () => {
                       borderWidth: 2,
                     }}
                     onBlur={onBlur}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
+                    dropDownContainerStyle={{
+                      position: "relative",
+                      top: 0,
+                    }}
                   />
                 )}
               />
@@ -1126,6 +1152,12 @@ const EligibilityForm = () => {
                       borderRadius: 1,
                       borderWidth: 2,
                     }}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
+                    dropDownContainerStyle={{
+                      position: "relative",
+                      top: 0,
+                    }}
                   />
                 )}
               />
@@ -1167,6 +1199,12 @@ const EligibilityForm = () => {
                       borderRadius: 1,
                       borderWidth: 2,
                     }}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
+                    dropDownContainerStyle={{
+                      position: "relative",
+                      top: 0,
+                    }}
                   />
                 )}
               />
@@ -1206,6 +1244,12 @@ const EligibilityForm = () => {
                       borderColor: theme.colors.primary,
                       borderRadius: 1,
                       borderWidth: 2,
+                    }}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
+                    dropDownContainerStyle={{
+                      position: "relative",
+                      top: 0,
                     }}
                   />
                 )}
@@ -1247,6 +1291,12 @@ const EligibilityForm = () => {
                       borderRadius: 1,
                       borderWidth: 2,
                     }}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
+                    dropDownContainerStyle={{
+                      position: "relative",
+                      top: 0,
+                    }}
                   />
                 )}
               />
@@ -1287,6 +1337,12 @@ const EligibilityForm = () => {
                       borderRadius: 1,
                       borderWidth: 2,
                     }}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
+                    dropDownContainerStyle={{
+                      position: "relative",
+                      top: 0,
+                    }}
                   />
                 )}
               />
@@ -1325,6 +1381,12 @@ const EligibilityForm = () => {
                       borderColor: theme.colors.primary,
                       borderRadius: 1,
                       borderWidth: 2,
+                    }}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
+                    dropDownContainerStyle={{
+                      position: "relative",
+                      top: 0,
                     }}
                   />
                 )}
@@ -1372,6 +1434,8 @@ const EligibilityForm = () => {
                       width: "40%",
                       borderEndEndRadius: 20,
                       borderBottomLeftRadius: 20,
+                      position: "relative",
+                      top: 0,
                     }}
                     listItemLabelStyle={{
                       fontSize: 13,
@@ -1379,6 +1443,8 @@ const EligibilityForm = () => {
                     textStyle={{
                       fontSize: 13,
                     }}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
                   />
                 )}
               />
@@ -1426,6 +1492,8 @@ const EligibilityForm = () => {
                       width: "40%",
                       borderBottomRightRadius: 20,
                       borderBottomLeftRadius: 20,
+                      position: "relative",
+                      top: 0,
                     }}
                     listItemLabelStyle={{
                       fontSize: 13,
@@ -1433,6 +1501,8 @@ const EligibilityForm = () => {
                     textStyle={{
                       fontSize: 13,
                     }}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
                   />
                 )}
               />
@@ -1480,13 +1550,17 @@ const EligibilityForm = () => {
                       width: "40%",
                       borderBottomRightRadius: 20,
                       borderBottomLeftRadius: 20,
+                      position: "relative",
+                      top: 0,
                     }}
                     listItemLabelStyle={{
                       fontSize: 13,
                     }}
                     textStyle={{
-                      fontSize: 13, // Font size for placeholder
+                      fontSize: 13,
                     }}
+                    scrollViewProps={{ nestedScrollEnabled: true }}
+                    listMode="SCROLLVIEW"
                   />
                 )}
               />
@@ -1513,7 +1587,13 @@ const EligibilityForm = () => {
                 control={control}
                 name="someFinanceITExperienceOrTraining"
                 render={({ field: { value, onChange } }) => (
-                  <TouchableOpacity style={secondbox} onPress={tick}>
+                  <TouchableOpacity
+                    style={secondbox}
+                    onPress={() => {
+                      tick();
+                      onChange(unfilled ? "false" : "true");
+                    }}
+                  >
                     {unfilled && <CheckBoxFill />}
                   </TouchableOpacity>
                 )}
