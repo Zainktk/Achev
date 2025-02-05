@@ -116,6 +116,81 @@ export const Input = ({
   );
 };
 
+export const SignupEmailInput = ({
+  style,
+  label,
+  secureTextEntry,
+  onChangeText,
+  value,
+  error,
+  rightIcon,
+  CursonHidden,
+  disabled,
+  multiline,
+  keyboardType,
+  placeholder,
+  onBlur,
+  onFocus,
+}: Props) => {
+  const theme = useTheme();
+  const handleTextChange = (text: string) => {
+    const lowercaseText = text.toLowerCase();
+    if (onChangeText) {
+      onChangeText(lowercaseText);
+    }
+  };
+
+  return (
+    <>
+      <TextInput
+        multiline={multiline ? multiline : false}
+        activeUnderlineColor={"transparent"}
+        // numberOfLines={5}
+        placeholder={placeholder}
+        keyboardAppearance="light"
+        selectionColor="#000"
+        disabled={disabled}
+        caretHidden={CursonHidden}
+        onChangeText={handleTextChange}
+        cursorColor={"black"}
+        onBlur={onBlur}
+        autoCapitalize="none"
+        onFocus={onFocus}
+        value={value}
+        editable={false}
+        mode="flat"
+        keyboardType={keyboardType ? keyboardType : "ascii-capable"}
+        style={{
+          backgroundColor: "transparent",
+          borderTopColor: theme.colors?.primary,
+          borderRightColor: theme.colors?.primary,
+          borderLeftColor: theme.colors?.primary,
+          borderBottomColor: theme.colors?.primary,
+          borderBottomWidth:
+            style?.borderBottomWidth >= 0 ? style.borderBottomWidth : 2,
+          borderRightWidth: 2,
+          borderLeftWidth: 2,
+          borderTopWidth: 2,
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+        }}
+        textColor={theme?.colors?.secondary}
+        // onContentSizeChange={(e) =>
+        //   handleContentSizeChange(
+        //     e.nativeEvent.contentSize.width,
+        //     e.nativeEvent.contentSize.height
+        //   )
+        // }
+        // label={label}
+        // error={error ? true : false}
+        secureTextEntry={false}
+        right={rightIcon}
+      />
+      {error && <HelperText styles={{ marginTop: 3 }} label={error} />}
+    </>
+  );
+};
+
 export const PasswordInput = ({
   label,
   onChangeText,

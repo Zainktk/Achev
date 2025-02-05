@@ -26,8 +26,8 @@ const LanguageServices = ({
               status === "Pending"
                 ? "rgba(244, 245, 246, 1)"
                 : "rgba(71, 93, 118, 1)",
-            height: 40,
-            borderRadius: 20,
+            height: 50,
+            borderRadius: 25,
             marginHorizontal: 20,
             paddingHorizontal: 10,
             justifyContent: "center",

@@ -26,8 +26,8 @@ const EmploymentServices = ({
               status === "Pending"
                 ? "rgba(247, 251, 250, 1)"
                 : "rgba(92, 184, 178, 1)",
-            height: 40,
-            borderRadius: 20,
+            height: 50,
+            borderRadius: 25,
             marginHorizontal: 20,
             paddingHorizontal: 10,
             justifyContent: "center",

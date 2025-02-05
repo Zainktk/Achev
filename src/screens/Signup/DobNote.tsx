@@ -1,4 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { ScreenSubText, ScreenTitle } from "@atoms";
 import { Backarrow } from "@utils";
@@ -15,6 +22,15 @@ const DobNote = ({ navigation, route }: Props) => {
   const theme = useTheme();
 
   const insets = useSafeAreaInsets();
+
+  const openURL = async (url: string) => {
+    try {
+      await Linking.openURL(url);
+    } catch (error) {
+      Alert.alert("Error", "Unable to open URL: " + url);
+      console.error("Error opening URL:", error);
+    }
+  };
 
   return (
     <View style={{ flex: 1, paddingTop: insets.top + 10 }}>
@@ -60,7 +76,8 @@ const DobNote = ({ navigation, route }: Props) => {
             <Text style={{ color: "#E25A45", fontWeight: "700" }}>ERROR:</Text>{" "}
             <Text style={{ fontWeight: "600" }}>
               You must be 14 years or older to create an account. To learn more
-              about our available youth services, please visit: achev.ca
+              about our available youth services, please visit:{" "}
+              <Text onPress={() => openURL("https://achev.ca")}>achev.ca</Text>
             </Text>
           </Text>
         </View>
